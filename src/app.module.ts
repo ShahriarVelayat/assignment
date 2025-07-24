@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import {TypeOrmModule} from "@nestjs/typeorm";
-import * as configs from 'config';
+import * as configs from 'config'
 
-let database_config = configs.get('database')
+let database_config:any = configs.get('database')
 @Module({
   imports: [
     TypeOrmModule.forRoot({
