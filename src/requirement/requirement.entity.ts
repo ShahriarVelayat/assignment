@@ -8,7 +8,7 @@ export class Requirement {
     @Column('string')
     name: string;
 
-    @Column()
+    @Column('number')
     experience_level: number;
 
     @ManyToMany(() => Job, (job) => job.id)

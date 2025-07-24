@@ -14,37 +14,37 @@ export class Job {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column('string')
     position: string;
 
-    @Column({default: false})
+    @Column('boolean', {default: false})
     remote: boolean
 
     @Column('enum')
     employment_type: Employment_type_enum;
 
-    @Column()
+    @Column('number')
     salary_min: number;
 
-    @Column()
+    @Column('number')
     salary_max: number;
 
-    @Column()
+    @Column('string')
     salary_currency: string;
 
-    @Column({nullable: true})
+    @Column('string', {nullable: true})
     salary_raw: string;
 
-    @Column()
+    @Column('string')
     source: string;
 
-    @Column()
+    @Column('string')
     source_id: string;
 
-    @Column()
+    @Column('string')
     external_id: string;
 
-    @Column()
+    @Column('date')
     date_posted: Date;
 
     @ManyToOne(() => Company, company => company.id, {cascade: true})
