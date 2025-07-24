@@ -1,4 +1,10 @@
-import { Module } from '@nestjs/common';
+import {Module} from '@nestjs/common';
+import {Location} from "./location.entity";
+import {TypeOrmModule} from '@nestjs/typeorm';
 
-@Module({})
-export class LocationModule {}
+@Module({
+    imports: [TypeOrmModule.forFeature([Location])],
+    exports: [TypeOrmModule]
+})
+export class LocationModule {
+}

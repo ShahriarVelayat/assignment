@@ -6,13 +6,13 @@ export class Company {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column('string')
+    @Column('text')
     name: string;
 
     @Column('text')
     website: string;
 
-    @Column('string')
+    @Column('text')
     industry: string;
 
     @OneToMany(() => Location, (location) => location.id)

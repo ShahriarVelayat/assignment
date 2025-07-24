@@ -1,4 +1,4 @@
-import {Inject, Injectable} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {Job} from "./job.entity";
 import {Repository} from "typeorm";
 import {Location} from "../location/location.entity";
@@ -6,18 +6,19 @@ import {Requirement} from "../requirement/requirement.entity";
 import {Company} from "../company/company.entity";
 import axios from "axios";
 import {Cron, CronExpression} from '@nestjs/schedule';
+import {InjectRepository} from "@nestjs/typeorm";
 
 @Injectable()
 export class JobService {
 
     constructor(
-        @Inject(Job)
+        @InjectRepository(Job)
         private jobRepo: Repository<Job>,
-        @Inject(Location)
+        @InjectRepository(Location)
         private locationRepo: Repository<Location>,
-        @Inject(Requirement)
+        @InjectRepository(Requirement)
         private requirementRepo: Repository<Requirement>,
-        @Inject(Company)
+        @InjectRepository(Company)
         private companyRepo: Repository<Company>,
     ) {
     }
@@ -35,7 +36,7 @@ export class JobService {
                 }
             );
 
-            console.log('Api 1 response =====>\n', response);
+            console.log('Api 1 response =====>\n', response.data);
         } catch (error) {
 
         }
@@ -52,7 +53,7 @@ export class JobService {
             }
         );
 
-        console.log('Api 2 response =====>\n', response);
+        console.log('Api 2 response =====>\n', response.data);
     }
 
 

@@ -1,14 +1,16 @@
-import {Column, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Job} from "../job/job.entity";
+
+@Entity()
 
 export class Requirement {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column('string')
+    @Column('text')
     name: string;
 
-    @Column('number')
+    @Column('int')
     experience_level: number;
 
     @ManyToMany(() => Job, (job) => job.id)

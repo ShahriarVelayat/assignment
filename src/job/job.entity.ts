@@ -1,4 +1,4 @@
-import {Column, ManyToMany, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Requirement} from "../requirement/requirement.entity";
 import {Company} from "../company/company.entity";
 import {Location} from "../location/location.entity";
@@ -10,38 +10,39 @@ export enum Employment_type_enum {
 
 }
 
+@Entity()
 export class Job {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column('string')
+    @Column('text')
     position: string;
 
     @Column('boolean', {default: false})
     remote: boolean
 
-    @Column('enum')
+    @Column('enum', {enum: Employment_type_enum})
     employment_type: Employment_type_enum;
 
-    @Column('number')
+    @Column('int')
     salary_min: number;
 
-    @Column('number')
+    @Column('int')
     salary_max: number;
 
-    @Column('string')
+    @Column('text')
     salary_currency: string;
 
-    @Column('string', {nullable: true})
+    @Column('text', {nullable: true})
     salary_raw: string;
 
-    @Column('string')
+    @Column('text')
     source: string;
 
-    @Column('string')
+    @Column('text')
     source_id: string;
 
-    @Column('string')
+    @Column('text')
     external_id: string;
 
     @Column('date')

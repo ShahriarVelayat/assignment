@@ -1,4 +1,10 @@
-import { Module } from '@nestjs/common';
+import {Module} from '@nestjs/common';
+import {TypeOrmModule} from "@nestjs/typeorm";
+import {Requirement} from "./requirement.entity";
 
-@Module({})
-export class RequirementModule {}
+@Module({
+    imports: [TypeOrmModule.forFeature([Requirement])],
+    exports: [TypeOrmModule]
+})
+export class RequirementModule {
+}
