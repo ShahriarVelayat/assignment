@@ -8,9 +8,14 @@ import axios from 'axios';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Api1Interafce, Api2Interafce } from './interfaces/api.interafce';
+import { GetJobsReqDto } from './dto/get-jobs.req.dto';
+import { QueryUtil } from '../utils/query.util';
+import { GetJobsResDto, JobDetail } from './dto/get-jobs.res.dto';
 
 @Injectable()
 export class JobService {
+  async;
+
   constructor(
     @InjectRepository(Job)
     private jobRepo: Repository<Job>,
@@ -217,5 +222,47 @@ export class JobService {
         await this.jobRepo.save(foundJob);
       }
     }
+  }
+
+  async getJobs(body: GetJobsReqDto) {
+    const query = new QueryUtil(this.jobRepo, {
+      search: body.search,
+      searchIn: ['position'],
+      limit: body.limit,
+      pageIndex: body.pageIndex,
+      sortBy: body.sortBy,
+      order: body.order,
+      filter: body
+    });
+    const result = await query.find();
+
+    let response = new GetJobsResDto();
+
+    response.limit = result.limit;
+    response.pageIndex = result.pageIndex;
+    response.totalItems = result.totalItems;
+    response.items = [];
+
+    for (const item of result.items) {
+      let temp = new JobDetail();
+      temp.id = item.id;
+      temp.position = item.position;
+      temp.remote = item.remote;
+      temp.employment_type = item.employment_type;
+      temp.salary_min = item.salary_min;
+      temp.salary_max = item.salary_max;
+      temp.salary_currency = item.salary_currency;
+      temp.source = item.source;
+      temp.source_id = item.source_id;
+      temp.date_posted = item.date_posted;
+      temp.company = item.company;
+      temp.location = item.location;
+      temp.requirements = item.requirements;
+
+      response.items.push(temp);
+    }
+
+    // console.log(result);
+    return response;
   }
 }
