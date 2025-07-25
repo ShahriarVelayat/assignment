@@ -22,7 +22,7 @@ export class JobService {
     private companyRepo: Repository<Company>
   ) {}
 
-  // @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_10_SECONDS)
   async fetchDataFromApi1() {
     try {
       console.log('=== Fetching data from Api1 ===');
@@ -104,8 +104,8 @@ export class JobService {
         if (!requirement) {
           requirement = this.requirementRepo.create({ name: skill });
           await this.requirementRepo.save(requirement);
-          requirements.push(requirement);
         }
+        requirements.push(requirement);
       }
 
       let foundJob = await this.jobRepo.findOne({ where: { source_id: job.jobId } });
@@ -192,8 +192,8 @@ export class JobService {
         if (!requirement) {
           requirement = this.requirementRepo.create({ name: skill, experience_level: job.requirements.experience });
           await this.requirementRepo.save(requirement);
-          requirements.push(requirement);
         }
+        requirements.push(requirement);
       }
 
       let foundJob = await this.jobRepo.findOne({ where: { source_id: jobKey } });
