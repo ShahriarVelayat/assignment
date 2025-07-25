@@ -1,59 +1,53 @@
-import {Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {Requirement} from "../requirement/requirement.entity";
-import {Company} from "../company/company.entity";
-import {Location} from "../location/location.entity";
+import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Requirement } from '../requirement/requirement.entity';
+import { Company } from '../company/company.entity';
+import { Location } from '../location/location.entity';
 
 export enum Employment_type_enum {
-    PART_TIME = "part_time",
-    CONTRACT = "contract",
-    FULL_TIME = "full_time",
-
+  PART_TIME = 'part_time',
+  CONTRACT = 'contract',
+  FULL_TIME = 'full_time',
+  'UNKNOWN' = 'unknown'
 }
 
 @Entity()
 export class Job {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column('text')
-    position: string;
+  @Column('text')
+  position: string;
 
-    @Column('boolean', {default: false})
-    remote: boolean
+  @Column('boolean', { default: false })
+  remote: boolean;
 
-    @Column('enum', {enum: Employment_type_enum})
-    employment_type: Employment_type_enum;
+  @Column('enum', { enum: Employment_type_enum })
+  employment_type: Employment_type_enum;
 
-    @Column('int')
-    salary_min: number;
+  @Column('int')
+  salary_min: number;
 
-    @Column('int')
-    salary_max: number;
+  @Column('int')
+  salary_max: number;
 
-    @Column('text')
-    salary_currency: string;
+  @Column('text')
+  salary_currency: string;
 
-    @Column('text', {nullable: true})
-    salary_raw: string;
+  @Column('text')
+  source: string;
 
-    @Column('text')
-    source: string;
+  @Column('text')
+  source_id: string;
 
-    @Column('text')
-    source_id: string;
+  @Column('date')
+  date_posted: Date;
 
-    @Column('text')
-    external_id: string;
+  @ManyToOne(() => Company, company => company.id, { cascade: true })
+  company: Company;
 
-    @Column('date')
-    date_posted: Date;
+  @ManyToOne(() => Location, location => location.id, { cascade: true })
+  location: Location;
 
-    @ManyToOne(() => Company, company => company.id, {cascade: true})
-    company: Company;
-
-    @ManyToOne(() => Location, location => location.id, {cascade: true})
-    location: Location;
-
-    @ManyToMany(() => Requirement, (req) => req.id)
-    requirements: Requirement[]
+  @ManyToMany(() => Requirement, req => req.id)
+  requirements: Requirement[];
 }
