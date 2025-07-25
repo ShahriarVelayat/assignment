@@ -104,8 +104,6 @@ export class QueryUtil<T extends ObjectLiteral> {
 
     // Pagination
     qb.skip(skip).take(limit);
-    console.log('query   =====>  ', qb.getQuery());
-
     const [items, totalItems] = await qb.getManyAndCount();
 
     return {

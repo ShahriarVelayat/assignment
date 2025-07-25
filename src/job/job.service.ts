@@ -261,8 +261,6 @@ export class JobService {
 
       response.items.push(temp);
     }
-
-    // console.log(result);
     return response;
   }
 }
