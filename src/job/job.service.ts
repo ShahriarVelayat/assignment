@@ -14,8 +14,6 @@ import { GetJobsResDto, JobDetail } from './dto/get-jobs.res.dto';
 
 @Injectable()
 export class JobService {
-  async;
-
   constructor(
     @InjectRepository(Job)
     private jobRepo: Repository<Job>,
