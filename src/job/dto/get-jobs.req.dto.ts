@@ -8,12 +8,12 @@ export class GetJobsReqDto extends QueryReq {
   @IsNumber()
   salary_min?: string;
 
-  @ApiProperty({ description: 'max salary filter', example: 20000, required: false })
+  @ApiProperty({ description: 'max salary filter', example: 200000, required: false })
   @IsOptional()
   @IsNumber()
   salary_max?: string;
 
-  @ApiProperty({ description: 'city name', example: 'San Diego', required: false })
+  @ApiProperty({ description: 'city name', example: 'San Francisco', required: false })
   @IsOptional()
   @IsString()
   location_city?: string;

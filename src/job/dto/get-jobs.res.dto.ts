@@ -1,37 +1,9 @@
 import { ArrayResponse } from '../interfaces/query.req';
 import { ApiProperty } from '@nestjs/swagger';
 import { Employment_type_enum } from '../job.entity';
-
-export class CompanyDetail {
-  @ApiProperty({ description: '' })
-  id: number;
-  @ApiProperty({ description: '' })
-  name: string;
-  @ApiProperty({ description: '' })
-  website: string;
-  @ApiProperty({ description: '' })
-  industry: string;
-}
-
-export class CompanyLocationDetail {
-  @ApiProperty({ description: '' })
-  id: number;
-  @ApiProperty({ description: '' })
-  city: string;
-  @ApiProperty({ description: '' })
-  state: string;
-  @ApiProperty({ description: '' })
-  country: string;
-}
-
-export class RequirementDetail {
-  @ApiProperty({ description: '' })
-  id: number;
-  @ApiProperty({ description: '' })
-  name: string;
-  @ApiProperty({ description: '' })
-  experience_level: number;
-}
+import { CompanyDetail } from '../../company/dto/get-companies.res.dto';
+import { CompanyLocationDetail } from 'src/location/dto/get-locations.res.dto';
+import { RequirementDetail } from '../../requirement/dto/get-requirements.res.dto';
 
 export class JobDetail {
   @ApiProperty({ description: 'job id', example: '123' })

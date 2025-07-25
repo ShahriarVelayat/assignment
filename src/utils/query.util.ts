@@ -98,7 +98,7 @@ export class QueryUtil<T extends ObjectLiteral> {
     }
 
     // Sort
-    const sortBy = this.query.sortBy || `${alias}.id`;
+    const sortBy = `${alias}.` + this.query.sortBy || `${alias}.id`;
     const order = this.query.order === 'asc' ? 'ASC' : 'DESC';
     qb.orderBy(sortBy, order);
 
