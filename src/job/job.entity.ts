@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Requirement } from '../requirement/requirement.entity';
 import { Company } from '../company/company.entity';
 import { Location } from '../location/location.entity';
@@ -42,12 +42,13 @@ export class Job {
   @Column('date')
   date_posted: Date;
 
-  @ManyToOne(() => Company, company => company.id, { cascade: true })
+  @ManyToOne(() => Company, company => company.jobs, { cascade: true })
   company: Company;
 
-  @ManyToOne(() => Location, location => location.id, { cascade: true })
+  @ManyToOne(() => Location, location => location.jobs, { cascade: true })
   location: Location;
 
-  @ManyToMany(() => Requirement, req => req.id)
+  @ManyToMany(() => Requirement, req => req.jobs)
+  @JoinTable()
   requirements: Requirement[];
 }

@@ -12,6 +12,6 @@ export class Requirement {
   @Column('int', { default: 0 })
   experience_level: number;
 
-  @ManyToMany(() => Job, job => job.id)
+  @ManyToMany(() => Job, job => job.requirements)
   jobs: Job[];
 }

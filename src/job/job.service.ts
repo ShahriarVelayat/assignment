@@ -7,7 +7,7 @@ import { Company } from '../company/company.entity';
 import axios from 'axios';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Api1Interafce } from './interfaces/api.interafce';
+import { Api1Interafce, Api2Interafce } from './interfaces/api.interafce';
 
 @Injectable()
 export class JobService {
@@ -22,7 +22,7 @@ export class JobService {
     private companyRepo: Repository<Company>
   ) {}
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  // @Cron(CronExpression.EVERY_10_SECONDS)
   async fetchDataFromApi1() {
     try {
       console.log('=== Fetching data from Api1 ===');
@@ -36,7 +36,8 @@ export class JobService {
       }
       await this.handleApi1Response(response.data);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      console.trace(error);
       throw new Error('Error fetching data from API 1', error.message);
     }
   }
@@ -51,7 +52,13 @@ export class JobService {
           accept: 'application/json'
         }
       });
+      if (response.status !== 200 || response.data?.status !== 'success') {
+        throw new Error(response.statusText);
+      }
+      await this.handleApi2Response(response.data);
     } catch (error) {
+      // console.error(error);
+      console.trace(error);
       throw new Error('Error fetching data from API 2', error.message);
     }
   }
@@ -110,7 +117,7 @@ export class JobService {
           employment_type: this.getJobType(job.details.type.toLowerCase()) || Employment_type_enum.UNKNOWN,
           salary_min: salaryRange?.min,
           salary_max: salaryRange?.max,
-          salary_currency: '$',
+          salary_currency: 'USD',
           source: 'api-1',
           source_id: job.jobId,
           date_posted: new Date(job.postedDate),
@@ -139,5 +146,76 @@ export class JobService {
     return Object.values(Employment_type_enum).find(type => type === value);
   }
 
-  handleApi2Response(data: Api1Interafce) {}
+  async handleApi2Response(response: Api2Interafce) {
+    let data = response.data;
+    if (!data.jobsList) {
+      throw new Error('Job not found');
+    }
+
+    for (const jobKey of Object.keys(data.jobsList)) {
+      let job = data.jobsList[jobKey];
+      let company = await this.companyRepo.findOne({
+        where: {
+          name: job.employer.companyName
+        }
+      });
+
+      if (!company) {
+        company = await this.companyRepo.create({ name: job.employer.companyName, website: job.employer.website });
+      }
+
+      let location = await this.locationRepo.findOne({
+        where: {
+          city: job.location.city,
+          state: job.location.state
+        }
+      });
+
+      if (!location) {
+        location = this.locationRepo.create({
+          city: job.location.city,
+          state: job.location.state,
+          country: 'US'
+        });
+        await this.locationRepo.save(location);
+      }
+
+      let requirements: any = [];
+      for (const skill of job.requirements.technologies) {
+        let requirement = await this.requirementRepo.findOne({
+          where: {
+            name: skill,
+            experience_level: job.requirements.experience
+          }
+        });
+
+        if (!requirement) {
+          requirement = this.requirementRepo.create({ name: skill, experience_level: job.requirements.experience });
+          await this.requirementRepo.save(requirement);
+          requirements.push(requirement);
+        }
+      }
+
+      let foundJob = await this.jobRepo.findOne({ where: { source_id: jobKey } });
+
+      if (!foundJob) {
+        foundJob = this.jobRepo.create({
+          position: job.position,
+          remote: job.location.remote,
+          employment_type: Employment_type_enum.UNKNOWN,
+          salary_min: job.compensation?.min,
+          salary_max: job.compensation?.max,
+          salary_currency: job.compensation.currency,
+          source: 'api-2',
+          source_id: jobKey,
+          date_posted: new Date(job.datePosted),
+          company: company,
+          location: location,
+          requirements: requirements
+        });
+
+        await this.jobRepo.save(foundJob);
+      }
+    }
+  }
 }

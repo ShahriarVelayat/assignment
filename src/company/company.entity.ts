@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Location } from '../location/location.entity';
+import { Job } from '../job/job.entity';
 
 @Entity()
 export class Company {
@@ -13,7 +15,10 @@ export class Company {
 
   @Column('text', { nullable: true })
   industry: string;
-  //
-  // @OneToMany(() => Location, location => location.id)
-  // locations: Location[];
+
+  @OneToMany(() => Job, job => job.company)
+  jobs: Job[];
+
+  @OneToMany(() => Location, location => location.companies)
+  locations: Location[];
 }

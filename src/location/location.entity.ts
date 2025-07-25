@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Company } from '../company/company.entity';
+import { Job } from '../job/job.entity';
 
 @Entity()
 export class Location {
@@ -14,6 +16,9 @@ export class Location {
   @Column('text')
   country: string;
 
-  // @ManyToOne(() => Company, (company) => company.id)
-  // companies: Company[]
+  @OneToMany(() => Job, job => job.location)
+  jobs: Job[];
+
+  @ManyToOne(() => Company, company => company.locations)
+  companies: Company;
 }
